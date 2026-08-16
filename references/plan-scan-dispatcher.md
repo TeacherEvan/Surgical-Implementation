@@ -47,8 +47,7 @@ remain after verify-implementation.
   backs every acceptance criterion.
 
 ## Edge cases
-- **N == 0 (no plan)**: fall through to DISCOVER/REQUIREMENTS from the user's
-  request; author a fresh plan (≥10 objectives) per G&L Auditor V2, then proceed.
+- **N == 0 (no plan)**: fall through to DISCOVER/REQUIREMENTS from the user's request; author a fresh plan (>=10 objectives) using the copy-ready templates in `references/v2-artifact-templates.md`; run CONSISTENCY_GATE (replan up to 5 cycles, then STOP_AND_REQUEST_USER) before IMPLEMENT; the governance rules (approval gates, bounded-retry ledger, failure taxonomy, research freshness) are in `references/v2-governance.md`; the 10 V2 agent roles dispatch as envelopes from `references/v2-agent-envelopes.md`.
 - **Plan already implemented (gates green, tree matches)**: do NOT spawn workers.
   Use `verify-then-sync` mode: verify gates, reconcile drift, commit scoped source,
   push, confirm `0 0`. This is the 2026-08-10 surgical-orchestration scar.
@@ -61,3 +60,8 @@ It composes three existing skills into one auditable loop and removes the dead-e
 review: code-review findings automatically become orchestration jobs, closing the
 remediation loop without human re-paste. The plan scan makes the skill
 self-directing from repo state.
+
+## References
+- `references/v2-artifact-templates.md` — copy-ready templates for REQUIREMENTS, CODEBASE-STATE, ARCHITECTURE, TODO(>=10), 17-section debrief, TRACEABILITY, SECURITY, RISK, research SOURCES/FINDINGS/DECISIONS, runtime manifest/state/events.
+- `references/v2-governance.md` — approval gates, bounded-retry ledger (<=5 consistency stop), failure taxonomy, research <=14d, final-status enum.
+- `references/v2-agent-envelopes.md` — the 10 V2 roles as delegate_task envelopes with capability matrix.
