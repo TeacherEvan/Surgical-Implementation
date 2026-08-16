@@ -210,7 +210,7 @@ Planning / evidence:
 - `CODEBASE-STATE.md` — run metadata, tech stack, relevant structure,
   components, baseline tests, dependencies (no secret values), known issues,
   initial risks.
-- `ARCHITECTURE.md` — current→target architecture, edited areas, interfaces/
+- `ARCHITECTURE.md` — current→target architecture, **Areas being edited** table, interfaces/
   dependencies, data/control flow, security boundaries, AC mapping.
 - `TODO.md` — **≥10 meaningful tickable objectives** (OBJ-001…), each with
   requirement link, affected areas, acceptance criteria, validation, and an
@@ -327,7 +327,7 @@ When IMPLEMENT runs, hand the verified plan objectives to `surgical-orchestratio
 ## Verification (Verifier agent)
 
 - unit/integration tests, type-check, lint, build, Playwright for UI.
-- Failure classes: CODE / TEST / ENVIRONMENT / DEPENDENCY / DATA / NETWORK / UNKNOWN.
+- Failure classes: `CODE_FAILURE` / `TEST_FAILURE` / `ENVIRONMENT_FAILURE` / `DEPENDENCY_FAILURE` / `DATA_FAILURE` / `NETWORK_FAILURE` / `UNKNOWN`.
 - Diagnose before retrying. Bounded retries. Never loop forever.
 
 ## Final Audit → code-review → orchestration loop

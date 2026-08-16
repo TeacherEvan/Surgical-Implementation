@@ -1,0 +1,11 @@
+{
+  "workflow_id": "example-001",
+  "run_id": "1",
+  "skill_version": "2.0.0",
+  "repository": "example-project",
+  "branch": "feature/example",
+  "started_at": "2026-08-15T00:00:00Z",
+  "status": "RUNNING",
+  "consistency_attempts": 0,
+  "verification_attempts": 0
+}

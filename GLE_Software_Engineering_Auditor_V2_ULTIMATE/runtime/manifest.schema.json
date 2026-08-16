@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AgentRunManifest",
+  "type": "object",
+  "required": [
+    "workflow_id",
+    "run_id",
+    "skill_version",
+    "started_at",
+    "status"
+  ],
+  "properties": {
+    "workflow_id": {
+      "type": "string"
+    },
+    "run_id": {
+      "type": "string"
+    },
+    "skill_version": {
+      "type": "string"
+    },
+    "repository": {
+      "type": "string"
+    },
+    "branch": {
+      "type": "string"
+    },
+    "started_at": {
+      "type": "string"
+    },
+    "ended_at": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "RUNNING",
+        "READY",
+        "READY_WITH_WARNINGS",
+        "NOT_READY",
+        "BLOCKED",
+        "STOPPED"
+      ]
+    },
+    "consistency_attempts": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 5
+    },
+    "verification_attempts": {
+      "type": "integer",
+      "minimum": 0
+    }
+  }
+}

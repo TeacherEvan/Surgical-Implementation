@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AgentEvent",
+  "type": "object",
+  "required": [
+    "timestamp",
+    "event",
+    "state"
+  ],
+  "properties": {
+    "timestamp": {
+      "type": "string"
+    },
+    "event": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string"
+    },
+    "actor": {
+      "type": "string"
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "metadata": {
+      "type": "object"
+    }
+  }
+}
