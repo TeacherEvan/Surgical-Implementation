@@ -115,8 +115,8 @@ The two escape/loop transitions are called out after the table:
 | 9 | `IMPLEMENT` | Gate PASS | Execute authorized objectives via surgical-orchestration Worker+Verifier loop; scope-bound | Source changes + `TODO.md` evidence updates | AUTO (in-scope) / REVIEW (risky) / APPROVAL_REQUIRED (destructive) |
 | 10 | `VERIFY` | Implementation available | Verifier: unit/type/lint/build/Playwright; classify failure; bounded retry | Test evidence + `audit/logs/retry-VERIFY.jsonl` | AUTO |
 | 11 | `SECURITY_AUDIT` | Implementation verified | Secret/credential/permission/destructive/injection scan; `BLOCK` on CRITICAL | `audit/SECURITY.md`, `audit/RISK.md` | AUTO (BLOCK on CRITICAL) |
-| 12 | `FINAL_AUDIT` | All evidence available | Independent audit: requirements↔diff↔TODO↔tests↔security↔risk; assign final status | `TRACEABILITY.md` + final-status decision | AUTO |
-| 13 | `DEBRIEF` | Audit complete | Author 17-section evidence-backed debrief | `debrief.md` (17 sections) | AUTO |
+|| 12 | `FINAL_AUDIT` | All evidence available | Independent audit: requirements↔diff↔TODO↔tests↔security↔risk; assign final status (READY / READY WITH WARNINGS / NOT READY / **BLOCKED**) | `TRACEABILITY.md` + final-status decision | AUTO |
+| 13 | `DEBRIEF` | **FINAL_AUDIT complete** | Author 17-section evidence-backed debrief | `debrief.md` (17 sections) | AUTO |
 | 14 | `HANDOFF` | Report complete | Record handoff notes, open items, next action, user decisions required | handoff notes (in `debrief.md` §16) | AUTO |
 | 15 | `COMPLETE` | All gates passed | Close run; finalize `manifest.json` status | closed `manifest.json` | AUTO |
 
@@ -172,7 +172,7 @@ INIT
 → VERIFY            (verifier agent: unit/type/lint/build/Playwright; bounded retries)
 → SECURITY_AUDIT    (secret scan, injection, authz; BLOCK on CRITICAL)
 → FINAL_AUDIT       (independent: never READY without evidence)
-→ DEBRIEF           (evidence-backed debrief.md, 17 sections)
+→ DEBRIEF           (**only after FINAL_AUDIT**) evidence-backed debrief.md, 17 sections
 → HANDOFF           (handoff notes + open items)
 → COMPLETE
 ```

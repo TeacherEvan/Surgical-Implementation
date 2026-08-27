@@ -1,0 +1,18 @@
+# Code-review skill advisory artifacts (not project source)
+audit_report.md
+review_findings.md
+fix_summary.md
+investigation_report.md
+
+# Salvage / leftover advisory artifacts
+.prune/
+
+# Build artifacts (future-proofing — none present at this layer)
+node_modules/
+dist/
+build/
+
+# System / editor artifacts (non-substantive)
+*.swp
+*.swo
+*~

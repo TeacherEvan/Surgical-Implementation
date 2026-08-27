@@ -458,7 +458,7 @@ Record a trust note so downstream decisions carry provenance.
   "version": "2.0.0",
   "gates": {
     "consistency": { "required": true, "passed": false, "attempts": 0 },
-    "verification": { "required": true, "passed": false, "attempts": 0 },
+    "verification": { "required": true, "passed": false, "attempts": 0, "maxAttempts": 3 },
     "security": { "required": true, "passed": false }
   }
 }
