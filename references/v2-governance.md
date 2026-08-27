@@ -138,6 +138,9 @@ traceable to the taxonomy.
   3. state the corrective action,
   4. increment the run number.
 - At **5 failures → `STOP_AND_REQUEST_USER`**. Do not loop a 6th time; surface
+  the consistency, record it, and stop. Note: `v2-artifact-templates.md` defines
+  a separate `maxAttempts: 3` for *verification* retry; the 5-cycle bound applies
+  to *consistency/planning* cycles (independent limits; do not conflate). Surface
   the blocker to the user.
 
 ### Verification retry policy
