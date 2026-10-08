@@ -17,3 +17,4 @@ build/
 *.swo
 *~
 docs/.scratch-audit/
+venv/
