@@ -17,7 +17,7 @@ requires a concrete governance layer the current skill does not provide.
 ### Evidence-based gap list (read, not assumed)
 
 | # | V2 requirement | Current skill state |
-|---|---|---|
+| --- | --- | --- |
 | G1 | Required artifact set (REQUIREMENTS, CODEBASE-STATE, ARCHITECTURE, TODO≥10, debrief, TRACEABILITY, SECURITY, RISK, research SOURCES/FINDINGS/DECISIONS, runtime manifest/state/events) | Only loose "Evidence artifacts" mentions; no templates; no runtime JSON |
 | G2 | Bounded-retry ledger + explicit ≤5 consistency stop (STOP_AND_REQUEST_USER) | "bounded retries" mentioned; no ledger; ≤5 not enforced as a run step |
 | G3 | 13-class failure taxonomy recorded per failure | Verifier "failure classes" only; no canonical taxonomy mapping |

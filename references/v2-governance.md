@@ -31,7 +31,7 @@ runs only after explicit approval, or is refused.
 ### Gate definitions
 
 | Gate | Meaning | What it permits |
-|---|---|---|
+| --- | --- | --- |
 | **AUTO** | Safe, low-risk, read/analysis or in-scope non-destructive work | read repository; search repository; create/update planning artifacts; run non-destructive tests; run static analysis |
 | **REVIEW** | Meaningful but non-destructive risk; human review advised before merge/landing | broad refactors; security-sensitive changes; dependency upgrades with meaningful risk |
 | **APPROVAL_REQUIRED** | Destructive, irreversible, or externally consequential; explicit user authorization mandatory | delete important data/files; destructive database migration; production deployment; credential rotation; permission changes; external account changes; irreversible operations |
@@ -59,7 +59,7 @@ The orchestrator's 13 working states and the gate each applies by default.
 `AUTO`.
 
 | # | State | Default gate | Escalation / notes |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | 1 | `DISCOVER` | AUTO | Read/search repo, `AGENTS.md`/`CLAUDE.md`, git state. Inaccessible repo → `STOP_AND_REQUEST_USER`, not a gate change. |
 | 2 | `REQUIREMENTS` | AUTO | Derive acceptance criteria; author artifact. Needs clarification → `STOP_AND_REQUEST_USER`. |
 | 3 | `RESEARCH` | AUTO | Read-only external research; multi-source; untrusted evidence. |
@@ -79,7 +79,7 @@ The orchestrator's 13 working states and the gate each applies by default.
 `IMPLEMENT` is the single state whose gate varies by the *nature* of the change:
 
 | Condition | Gate |
-|---|---|
+| --- | --- |
 | In-scope, behavior-preserving, non-destructive change (normal objective work) | **AUTO** |
 | Broad refactor, security-sensitive change, or risky dependency upgrade | **REVIEW** |
 | Destructive operation, production deployment, credential rotation, permission change, external account change, or any irreversible operation | **APPROVAL_REQUIRED** |
@@ -116,7 +116,7 @@ One JSON object per line. Canonical entry shape:
 ```
 
 | Field | Type | Required | Meaning |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `ts` | string (ISO-8601) | yes | Timestamp of the retry attempt. |
 | `state` | string | yes | The state being retried. |
 | `attempt` | integer | yes | Retry attempt number for this state (1-based). |
@@ -164,7 +164,7 @@ Every failure is classified into exactly one class from the V2 set defined in
 `orchestrator/failure-taxonomy.md`.
 
 | Class | Meaning |
-|---|---|
+| --- | --- |
 | `CODE_FAILURE` | Implementation defect (the code is wrong). |
 | `TEST_FAILURE` | Test defect (the test itself is wrong/brittle), not the code. |
 | `ENVIRONMENT_FAILURE` | Local/CI environment issue (missing tool, misconfigured runner). |
@@ -187,7 +187,7 @@ Every failure is classified into exactly one class from the V2 set defined in
 **Every failure records `category` + `evidence` + `impact` + `next action`.**
 
 | Field | Content |
-|---|---|
+| --- | --- |
 | `category` | One of the taxonomy classes above. |
 | `evidence` | Concrete proof — command output, log excerpt, diff, file/line reference. Never a vague assertion. |
 | `impact` | What the failure blocks or risks (which objective/AC/state). |
@@ -226,7 +226,7 @@ commands them.
 assigned without supporting evidence; `READY` is never assigned on faith.
 
 | Status | Applies when |
-|---|---|
+| --- | --- |
 | **READY** | All acceptance criteria are met **and** backed by evidence (tests, diffs, screenshots); security review passed with no CRITICAL; traceability complete; debrief accurate. |
 | **READY WITH WARNINGS** | All required objectives satisfied with evidence, but non-blocking issues remain (e.g. low-severity findings, known limitations, deferred non-critical work) that the user should know about. |
 | **NOT READY** | Required objectives are incomplete, acceptance criteria lack evidence, tests fail within budget, or the final audit could not confirm satisfaction. |
