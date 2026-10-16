@@ -11,7 +11,7 @@ fixes to this repo's `SKILL.md` + `references/`.
 `surgical-implementation` (SKILL.md) claims to "wrap the G&L Auditor V2 governance
 model" but is a thin conductor: it delegates to `surgical-orchestration` and
 `code-review` and *names* the V2 states (DISCOVER→…→COMPLETE) without realizing
-them. The V2 `SKILL.md` contract (`GLE_Software_Engineering_Auditor_V2_ULTIMATE/SKILL.md`)
+them. The V2 contract (`GLE_Software_Engineering_Auditor_V2_ULTIMATE/docs/V2-CONTRACT.md`)
 requires a concrete governance layer the current skill does not provide.
 
 ### Evidence-based gap list (read, not assumed)

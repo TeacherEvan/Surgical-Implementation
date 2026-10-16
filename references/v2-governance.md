@@ -15,7 +15,7 @@ edited by this skill):
 - `GLE_Software_Engineering_Auditor_V2_ULTIMATE/policies/security.md`
 - `GLE_Software_Engineering_Auditor_V2_ULTIMATE/policies/permissions.md`
 - `GLE_Software_Engineering_Auditor_V2_ULTIMATE/policies/execution.md`
-- `GLE_Software_Engineering_Auditor_V2_ULTIMATE/SKILL.md`
+- `GLE_Software_Engineering_Auditor_V2_ULTIMATE/docs/V2-CONTRACT.md`
 
 The runtime artifacts produced by a V2 run are written to the **target repo**
 (`docs/.scratch-audit/` or `docs/plans/`), never into this skill.

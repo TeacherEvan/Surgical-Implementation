@@ -55,7 +55,8 @@ This repository is two things at once:
 │       └── 2026-08-16-gle-v2-implementation.md
 └── GLE_Software_Engineering_Auditor_V2_ULTIMATE/   # V2 spec package
     ├── README.md                        # package overview
-    ├── SKILL.md
+    ├── docs/
+    │   └── V2-CONTRACT.md          # V2 contract (renamed: no nested SKILL.md)
     ├── agents/                          # 10 role specs
     │   ├── investigator.md  researcher.md  architect.md  planner.md  reviewer.md
     │   └── implementer.md  verifier.md  security-auditor.md  final-auditor.md  debriefer.md

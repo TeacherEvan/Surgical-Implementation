@@ -1,24 +1,18 @@
 ---
 name: surgical-implementation
-description: >-
-  Plan-driven, auditable software implementation pipeline that fully realizes the
-  G&L Software Engineering Auditor V2 governance model: a 15-state machine
-  (INIT→DISCOVER→REQUIREMENTS→RESEARCH→CODEBASE_STATE→ARCHITECT→PLAN→
-  CONSISTENCY_GATE→IMPLEMENT→VERIFY→SECURITY_AUDIT→FINAL_AUDIT→DEBRIEF→HANDOFF→
-  COMPLETE) with per-state actions, approval gates, bounded retries, 10 agent
-  roles, and an evidence/traceability artifact set. Wraps surgical-orchestration
-  (Worker+Verifier) and code-review into one auditable conductor. On invocation
-  it scans docs/<parent_folder> for plan files; if any exist it verifies
-  implementation against them and uses the plan content AS the execution prompt.
-  When all plans are complete it runs code-review and feeds findings back INTO
-  surgical-orchestration as new jobs. Preserves the user's verbatim
-  search:plan / verify-implementation / use(as_prompt) / code-review loop.
+description: "Use when executing an existing plan under governance."
+version: 1.0.0
+author: Hermes Agent (G&L Auditor V2 conductor)
+license: MIT
+platforms: [linux, macos, windows]
 category: software-development
 tags: [implementation, orchestration, code-review, audit, plan-driven, traceability, subagent, g&l-auditor-v2, governance]
 related_skills: [surgical-orchestration, code-review, superpowers, verify-before-planning-gaps, documentation-audit-patterns]
 ---
 
 # Surgical Implementation
+
+## Overview
 
 A plan-driven, evidence-backed implementation pipeline that acts as an
 **executable Hermes conductor** for the **G&L Software Engineering Auditor V2

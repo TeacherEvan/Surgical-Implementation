@@ -4,7 +4,7 @@ import json
 
 root = Path(__file__).resolve().parents[1]
 required = [
-    "SKILL.md",
+    "docs/V2-CONTRACT.md",
     "README.md",
     "agents/investigator.md",
     "agents/researcher.md",
