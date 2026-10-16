@@ -56,9 +56,11 @@ On EVERY invocation, before any other work:
 
 1. **Scan for plans.** `search_files` (or `rg`) for plan docs under the repo's
    `docs/` and `docs/plans/` (and the current working directory's parent folder):
+
    ```bash
    rg -l -g 'docs/**/*.md' -i 'todo|objective|tick|plan|WIP|\[x\]|\[ \]' .
    ```
+
    ASCII-safe pattern only — unicode checkmarks (☑/✅) break the rg regex and
    silently yield 0 matches. If you must match checked boxes, add a second pass:
    `rg -l -g 'docs/**/*.md' '☑|✅' .`
@@ -97,7 +99,7 @@ The two escape/loop transitions are called out after the table:
 `VERIFY → DIAGNOSE_FAILURE → AUTHORIZED_FIX → VERIFY` (bounded).
 
 | # | State | Entry condition | Action | Artifact produced | Approval gate |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 | 1 | `INIT` | Run created from request/plan | Initialize `runtime/manifest.json`, `state.json`, `events.jsonl`; assign `workflow_id`/`run_id` | `manifest.json` | AUTO |
 | 2 | `DISCOVER` | `INIT` complete | Read repo, `AGENTS.md`/`CLAUDE.md`, git state, manifests, tests, config; establish safe baseline | `CODEBASE-STATE.md` (draft) + initial findings event | AUTO |
 | 3 | `REQUIREMENTS` | Discovery available | Derive acceptance criteria from plan or request; capture constraints/assumptions | `REQUIREMENTS.md` (AC table) | AUTO |
@@ -121,7 +123,7 @@ do not loop.
 
 ### Consistency loop (bounded)
 
-```
+```text
 CONSISTENCY_GATE ──PASS──▶ IMPLEMENT
      │ FAIL (record inconsistency, corrective action, increment run#)
      ▼
@@ -132,12 +134,13 @@ CONSISTENCY_GATE ──PASS──▶ IMPLEMENT
                                      ▼
                             STOP_AND_REQUEST_USER
 ```
+
 Each retry records: failure category, evidence, impact, next action, incremented
 run number. At 5 failures: stop and request the user.
 
 ### Verification loop (bounded)
 
-```
+```text
 VERIFY ──evidence complete──▶ SECURITY_AUDIT
   │ failure
   ▼
@@ -148,12 +151,13 @@ AUTHORIZED_FIX (targeted fix, not blind re-loop)
   │
   └──▶ VERIFY   (repeat until evidence complete OR retry budget exhausted)
 ```
+
 Never `while tests fail: keep fixing forever`. Stop at the host-configured
 retry budget; record every attempt in `audit/logs/retry-VERIFY.jsonl`.
 
 ## Pipeline (compact overview)
 
-```
+```text
 INIT
 → DISCOVER          (read repo, AGENTS.md/CLAUDE.md, git state)
 → REQUIREMENTS      (derive acceptance criteria from plan or request)
@@ -199,6 +203,7 @@ skill**. Canonical templates and field schemas live in
 `references/v2-artifact-templates.md` (authored by a sibling job).
 
 Planning / evidence:
+
 - `REQUIREMENTS.md` — request restatement, functional/non-functional reqs,
   constraints, assumptions, acceptance-criteria table (AC-001…).
 - `CODEBASE-STATE.md` — run metadata, tech stack, relevant structure,
@@ -218,11 +223,13 @@ Planning / evidence:
 - `SECURITY.md`, `RISK.md` — security audit + risk classification outputs.
 
 Research ledger:
+
 - `research/SOURCES.md`, `research/FINDINGS.md`, `research/DECISIONS.md` —
   dated sources, findings, and recorded decisions (freshness ≤14 days for
   current-practice claims).
 
 Runtime machine-readable:
+
 - `runtime/manifest.json` — run identity + status enum + `consistency_attempts`
   (0–5) + `verification_attempts`. Schema in the V2 package.
 - `runtime/state.json` — current `state` (one of the 15 + `STOP_AND_REQUEST_USER`),
@@ -310,6 +317,7 @@ supports them.
 ## Execution: surgical-orchestration mapping
 
 When IMPLEMENT runs, hand the verified plan objectives to `surgical-orchestration`:
+
 - Group objectives by parent directory → JobCard entries.
 - Worker+Verifier pairs, max 2 concurrent, per-file scope sandbox.
 - SHA-256 debrief hashing for loop prevention.
@@ -417,6 +425,7 @@ See `references/git-recovery-and-scan.md` for the exact recovery + scan commands
 
 This skill is a workflow conductor, not a code library. To confirm it loads and
 the dispatcher rule fires correctly:
+
 1. `skill_view(name='surgical-implementation')` returns this content.
 2. On a repo with a plan doc in `docs/plans/`, the first action is the plan scan
    (ASCII-safe rg above), not a code edit.
