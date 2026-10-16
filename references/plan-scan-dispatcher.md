@@ -16,9 +16,13 @@ Resolve the repo root (cwd may be a parent like `GAMES/` — use the cwd-vs-proj
 guard from code-review: find `.git` / `package.json` within 3 levels). Then scan:
 
 ```bash
-# plan docs (markdown)
-rg -l --glob 'docs/**/*.md' -i 'todo|objective|tick|✅|☑|\[x\]|\[ \]|WIP|plan' .
-# agentplan / blueprint JSON
+# plan docs (markdown) — ASCII-safe by default; this exact pattern is what
+# SKILL.md mandates, so both copies of this rule stay byte-identical.
+rg -l --glob 'docs/**/*.md' -i 'todo|objective|tick|plan|WIP|\[x\]|\[ \]' .
+# Optional widening, ONLY on a host where you have confirmed rg handles UTF-8
+# in this pattern: add |✅|☑ to catch checkbox-emoji plans. Never make the
+# emoji form the default — it silently returns nothing on hosts where the
+# pattern is rejected, which reads as "no plans" and misroutes to DISCOVER.
 find docs -maxdepth 3 \( -name '*.agentplan' -o -name 'blueprint*.json' \) 2>/dev/null
 ```
 

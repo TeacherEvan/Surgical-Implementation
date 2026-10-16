@@ -1,0 +1,28 @@
+name: skill-conform
+
+"on":
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  conform:
+    name: Skill authoring conformance
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run conformance gate
+        run: python3 scripts/conform.py
+
+      # The bundled G&L V2 package has its own validator (required files,
+      # >=10 TODO objectives, loadable runtime schemas). Keep it green too.
+      - name: Validate V2 package
+        run: python3 GLE_Software_Engineering_Auditor_V2_ULTIMATE/scripts/validate-package.py
