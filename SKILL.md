@@ -23,6 +23,9 @@ metadata:
 | `references/v2-artifact-templates.md` | Required artifact shapes (`TODO.md`, `TRACEABILITY.md`, debrief) |
 | `references/v2-governance.md` | Approval gates and the review/retry loop |
 | `references/git-recovery-and-scan.md` | Recovering a dirty tree before the pipeline starts |
+| `references/browser-real-profile.md` | Why `browser.use_real_profile` fails on non-Chromium defaults |
+| `references/convex-array-index-match.md` | Convex `array.index` matching pitfall |
+| `references/places-api-radius.md` | Places API radius/rank semantics used in GLE audits |
 
 ## Overview
 
