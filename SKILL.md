@@ -1,16 +1,28 @@
 ---
 name: surgical-implementation
 description: "Use when executing an existing plan under governance."
-version: 1.0.0
-author: Hermes Agent (G&L Auditor V2 conductor)
+version: 1.0.1
+author: "TeacherEvan, Hermes Agent (G&L Auditor V2 conductor)"
 license: MIT
 platforms: [linux, macos, windows]
-category: software-development
-tags: [implementation, orchestration, code-review, audit, plan-driven, traceability, subagent, g&l-auditor-v2, governance]
-related_skills: [surgical-orchestration, code-review, superpowers, verify-before-planning-gaps, documentation-audit-patterns]
+metadata:
+  hermes:
+    category: software-development
+    tags: [implementation, orchestration, code-review, audit, plan-driven, traceability, subagent, g-l-auditor-v2, governance]
+    related_skills: [surgical-orchestration, surgical-audit, surgical-hermesdothealth, surgical-investigation]
 ---
 
 # Surgical Implementation
+
+## Auxiliary Resources
+
+| File | Use |
+|---|---|
+| `references/plan-scan-dispatcher.md` | The dispatcher contract: how a plan is scanned and routed |
+| `references/v2-agent-envelopes.md` | Per-role Agent envelope schema (inputs/outputs) |
+| `references/v2-artifact-templates.md` | Required artifact shapes (`TODO.md`, `TRACEABILITY.md`, debrief) |
+| `references/v2-governance.md` | Approval gates and the review/retry loop |
+| `references/git-recovery-and-scan.md` | Recovering a dirty tree before the pipeline starts |
 
 ## Overview
 
