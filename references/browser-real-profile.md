@@ -1,15 +1,37 @@
-# Browser Automation — Real Profile Mode Requirement
+# Browser Automation & Real-Profile Inspection
 
-The `browser_exec` tool with `use_real_profile=true` requires the host's default browser to be a supported Chromium: Chrome, Edge, Brave, Chromium (snap install).
+## Primary: `chrome-devtools` MCP (Real Profile / Brave or Chromium)
 
-If the default browser is Firefox or an unsupported version, navigation fails with:
+When verifying live UI rendering, console errors, network requests, or authenticated flows in an existing Chromium/Brave profile, configure or connect the **`chrome-devtools` MCP server** with `--executablePath /usr/bin/brave-browser` (or the host's Chromium binary path):
+
+```json
+{
+  "mcpServers": {
+    "chrome-devtools": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "chrome-devtools-mcp@latest",
+        "--executablePath",
+        "/usr/bin/brave-browser"
+      ]
+    }
+  }
+}
 ```
-browser.use_real_profile is on, but your default browser is not a supported Chromium browser
-```
 
-Fix options:
-1. Set Chromium as default: `update-alternatives --set x-www-browser /snap/bin/chromium`
-2. Disable real-profile mode for that session (use `new_tab()` without profile parameter when safe).
-3. For headless verification, use `brave-browser-stable --headless=new --screenshot=<path>` directly.
+Use `--browserUrl http://127.0.0.1:9222` instead when attaching to an already-running browser launched with `--remote-debugging-port=9222` so existing cookies and extension state remain isolated to that session.
 
-Always verify the deployed URL with a real browser screenshot (not just `curl` or `requests`) before claiming the UI works.
+## Headless & Playwright Fallbacks
+
+When MCP browser tools are unavailable or headless CI verification is needed:
+
+1. Use direct headless screenshots for static DOM checks:
+
+   ```bash
+   brave-browser --headless=new --screenshot=<output-path> <url>
+   ```
+
+   (or `chromium --headless=new --screenshot=<output-path> <url>` / `google-chrome` depending on the host).
+2. Use Playwright / headless Chromium assertions in automated test suites for interactive form/route verification rather than depending on desktop GUI state.
+3. If an agent host provides a `browser_exec(..., use_real_profile=true)` tool, ensure the host's `x-www-browser` points to a supported Chromium family binary before enabling real-profile mode; otherwise omit real-profile mode (`new_tab()` without profile attachment).

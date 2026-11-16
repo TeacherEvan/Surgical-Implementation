@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RetryLedgerEntry",
+  "type": "object",
+  "unevaluatedProperties": false,
+  "required": [
+    "timestamp",
+    "state",
+    "attempt",
+    "cycle",
+    "corrective_action",
+    "run_number"
+  ],
+  "properties": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "CONSISTENCY_GATE",
+        "VERIFY",
+        "SECURITY_AUDIT"
+      ]
+    },
+    "attempt": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "cycle": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "inconsistency": {
+      "type": "string"
+    },
+    "corrective_action": {
+      "type": "string",
+      "minLength": 1
+    },
+    "run_number": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "CODE_FAILURE",
+        "TEST_FAILURE",
+        "ENVIRONMENT_FAILURE",
+        "DEPENDENCY_FAILURE",
+        "DATA_FAILURE",
+        "NETWORK_FAILURE",
+        "AUTHORIZATION_FAILURE",
+        "SECURITY_BLOCK",
+        "SCOPE_FAILURE",
+        "RESEARCH_CONFLICT",
+        "UNKNOWN"
+      ]
+    },
+    "evidence": {
+      "type": "string"
+    },
+    "impact": {
+      "type": "string"
+    },
+    "next_action": {
+      "type": "string"
+    }
+  }
+}

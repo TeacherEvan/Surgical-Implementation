@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
-from pathlib import Path
-import json
+"""Validate required assets and schemas in the bundled G&L V2 package."""
 
-root = Path(__file__).resolve().parents[1]
-required = [
+from __future__ import annotations
+
+import json
+import sys
+from pathlib import Path
+
+root: Path = Path(__file__).resolve().parents[1]
+required: list[str] = [
     "docs/V2-CONTRACT.md",
     "README.md",
     "agents/investigator.md",
@@ -31,18 +36,29 @@ required = [
     "runtime/state.schema.json",
     "runtime/events.schema.json",
 ]
-missing = [p for p in required if not (root/p).exists()]
-if missing:
-    print("MISSING:")
-    for p in missing: print(" -", p)
-    raise SystemExit(1)
 
-todo = (root/"artifacts/TODO.md").read_text()
-count = todo.count("- [ ] OBJ-")
-if count < 10:
-    raise SystemExit(f"TODO has only {count} objectives; minimum is 10")
 
-for schema in ["manifest.schema.json","state.schema.json","events.schema.json"]:
-    json.loads((root/"runtime"/schema).read_text())
+def main() -> int:
+    """Validate bundled V2 artifacts, objectives, and runtime JSON schemas."""
+    missing = [p for p in required if not (root / p).exists()]
+    if missing:
+        print("MISSING:")
+        for p in missing:
+            print(" -", p)
+        return 1
 
-print("Package validation: PASS")
+    todo = (root / "artifacts/TODO.md").read_text(encoding="utf-8")
+    count = todo.count("- [ ] OBJ-")
+    if count < 10:
+        print(f"TODO has only {count} objectives; minimum is 10", file=sys.stderr)
+        return 1
+
+    for schema in ("manifest.schema.json", "state.schema.json", "events.schema.json"):
+        json.loads((root / "runtime" / schema).read_text(encoding="utf-8"))
+
+    print("Package validation: PASS")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

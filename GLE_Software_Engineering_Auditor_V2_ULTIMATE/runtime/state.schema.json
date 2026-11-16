@@ -2,11 +2,13 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "AgentRunState",
   "type": "object",
+  "unevaluatedProperties": false,
   "required": [
     "state"
   ],
   "properties": {
     "state": {
+      "type": "string",
       "enum": [
         "INIT",
         "DISCOVER",

@@ -17,8 +17,8 @@ edited by this skill):
 - `GLE_Software_Engineering_Auditor_V2_ULTIMATE/policies/execution.md`
 - `GLE_Software_Engineering_Auditor_V2_ULTIMATE/docs/V2-CONTRACT.md`
 
-The runtime artifacts produced by a V2 run are written to the **target repo**
-(`docs/.scratch-audit/` or `docs/plans/`), never into this skill.
+The runtime artifacts produced by a V2 run are written to the **target repo's**
+`docs/.scratch-audit/` directory, never into this skill.
 
 ---
 
@@ -52,11 +52,11 @@ it is `BLOCKED`** regardless of its nominal gate. The agent must:
 `BLOCKED` is the only gate that always stops forward progress until the user
 responds.
 
-### Per-state gate mapping (13-state machine)
+### Per-state gate mapping (15-state machine: 13 working states + bookends + escape)
 
-The orchestrator's 13 working states and the gate each applies by default.
-`INIT` and `COMPLETE` (the bookends of the full 15-state machine) are always
-`AUTO`.
+The orchestrator's 13 working states (`DISCOVER` through `HANDOFF`) and the gate
+each applies by default. `INIT` and `COMPLETE` (the bookends of the full 15-state
+machine) are always `AUTO`; `STOP_AND_REQUEST_USER` is the escape state.
 
 | # | State | Default gate | Escalation / notes |
 | --- | --- | --- | --- |
@@ -98,35 +98,36 @@ appended to a per-state JSONL ledger under `audit/logs/`.
 
 ### Ledger location & format
 
-File: `audit/logs/retry-<STATE>.jsonl`
-(e.g. `retry-CONSISTENCY_GATE.jsonl`, `retry-VERIFY.jsonl`).
+File: `docs/.scratch-audit/audit/logs/retry-<STATE>.jsonl`
+(e.g. `retry-CONSISTENCY_GATE.jsonl`, `retry-VERIFY.jsonl`). Validated against
+`schemas/retry-log.schema.json`.
 
 One JSON object per line. Canonical entry shape:
 
 ```json
 {
-  "ts": "2026-08-16T00:05:40Z",
+  "timestamp": "2026-08-16T00:05:40Z",
   "state": "CONSISTENCY_GATE",
   "attempt": 2,
   "cycle": 2,
-  "inconsistency": "TODO-004 acceptance criterion has no matching requirement link",
-  "correctiveAction": "Added REQ-003 and re-mapped OBJ-004 → REQ-003",
-  "runNumber": 2
+  "inconsistency": "OBJ-004 acceptance criterion has no matching requirement link",
+  "corrective_action": "Added REQ-003 and re-mapped OBJ-004 to REQ-003",
+  "run_number": 2
 }
 ```
 
 | Field | Type | Required | Meaning |
 | --- | --- | --- | --- |
-| `ts` | string (ISO-8601) | yes | Timestamp of the retry attempt. |
-| `state` | string | yes | The state being retried. |
-| `attempt` | integer | yes | Retry attempt number for this state (1-based). |
-| `cycle` | integer | yes | Planning/verification cycle number (for `CONSISTENCY_GATE`, the planning cycle; for `VERIFY`, the verification cycle). |
-| `inconsistency` | string | optional | The exact inconsistency/category found (esp. for `CONSISTENCY_GATE`); omit when not applicable. |
-| `correctiveAction` | string | yes | What was done to remediate before re-running. |
-| `runNumber` | integer | yes | Monotonic run number, incremented on every retry. |
+| `timestamp` | string (RFC 3339 `date-time`) | yes | Timestamp of the retry attempt. |
+| `state` | string (`CONSISTENCY_GATE` \| `VERIFY` \| `SECURITY_AUDIT`) | yes | The state being retried. |
+| `attempt` | integer (`>= 1`) | yes | Retry attempt number for this state (1-based). |
+| `cycle` | integer (`>= 1`) | yes | Planning/verification cycle number. |
+| `inconsistency` | string | optional | Exact inconsistency found (esp. for `CONSISTENCY_GATE`). |
+| `corrective_action` | string | yes | What was done to remediate before re-running. |
+| `run_number` | integer (`>= 1`) | yes | Monotonic run number, incremented on every retry. |
 
 For `VERIFY` failures, each entry also carries the failure record per §3
-(`category`, `evidence`, `impact`, `nextAction`) so the ledger is fully
+(`category`, `evidence`, `impact`, `next_action`) so the ledger is fully
 traceable to the taxonomy.
 
 ### Consistency retry policy
@@ -138,15 +139,15 @@ traceable to the taxonomy.
   3. state the corrective action,
   4. increment the run number.
 - At **5 failures → `STOP_AND_REQUEST_USER`**. Do not loop a 6th time; surface
-  the consistency, record it, and stop. Note: `v2-artifact-templates.md` defines
-  a separate `maxAttempts: 3` for *verification* retry; the 5-cycle bound applies
-  to *consistency/planning* cycles (independent limits; do not conflate). Surface
-  the blocker to the user.
+  the inconsistency, record it, and stop. Note: `runtime/manifest.json` tracks
+  `consistency_attempts` (`0`–`5`) separately from `verification_attempts` (which
+  is governed by the host verification retry budget, e.g., `3`). Surface any
+  exhausted budget to the user.
 
 ### Verification retry policy
 
-- VERIFY uses a **bounded retry budget configured by the host** (e.g.
-  `verification_attempts` in `runtime/manifest.json`).
+- VERIFY uses a **bounded retry budget configured by the host** (tracked via
+  `verification_attempts` in `docs/.scratch-audit/runtime/manifest.json`).
 - Never use `while tests fail: keep fixing forever`.
 - Instead, per attempt:
   1. classify the failure (§3),
@@ -193,9 +194,9 @@ Every failure is classified into exactly one class from the V2 set defined in
 | `impact` | What the failure blocks or risks (which objective/AC/state). |
 | `next action` | The specific, authorized remediation to attempt next (or escalation to user). |
 
-Failures are written both to the relevant `audit/logs/retry-<state>.jsonl` entry
-and surfaced in `debrief.md` §12 (Retry / Failure History). A failure is never
-re-classified away to make a status look better (see §6).
+Failures are written both to `docs/.scratch-audit/audit/logs/retry-<state>.jsonl`
+and surfaced in `docs/.scratch-audit/debrief.md` §12 (Retry / Failure History). A
+failure is never re-classified away to make a status look better (see §6).
 
 ---
 
@@ -233,8 +234,9 @@ assigned without supporting evidence; `READY` is never assigned on faith.
 | **BLOCKED** | A host-policy-prohibited or CRITICAL-security operation halted the run, or an authorization was refused; forward progress requires user action. |
 
 The `debrief.md` **§1 Executive Summary** uses exactly one of these four values
-as its **Status** field. `runtime/manifest.json` carries the same enum as the
-run's closing status.
+as its **Status** field. `docs/.scratch-audit/runtime/manifest.json` carries the
+matching schema enum (`READY`, `READY_WITH_WARNINGS`, `NOT_READY`, `BLOCKED`, or
+`STOPPED`) as the run's closing status.
 
 ---
 

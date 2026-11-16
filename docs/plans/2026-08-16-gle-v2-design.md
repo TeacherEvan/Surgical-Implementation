@@ -10,7 +10,7 @@ fixes to this repo's `SKILL.md` + `references/`.
 
 `surgical-implementation` (SKILL.md) claims to "wrap the G&L Auditor V2 governance
 model" but is a thin conductor: it delegates to `surgical-orchestration` and
-`code-review` and *names* the V2 states (DISCOVER→…→COMPLETE) without realizing
+`surgical-audit` and *names* the V2 states (DISCOVER→…→COMPLETE) without realizing
 them. The V2 contract (`GLE_Software_Engineering_Auditor_V2_ULTIMATE/docs/V2-CONTRACT.md`)
 requires a concrete governance layer the current skill does not provide.
 
@@ -20,7 +20,7 @@ requires a concrete governance layer the current skill does not provide.
 | --- | --- | --- |
 | G1 | Required artifact set (REQUIREMENTS, CODEBASE-STATE, ARCHITECTURE, TODO≥10, debrief, TRACEABILITY, SECURITY, RISK, research SOURCES/FINDINGS/DECISIONS, runtime manifest/state/events) | Only loose "Evidence artifacts" mentions; no templates; no runtime JSON |
 | G2 | Bounded-retry ledger + explicit ≤5 consistency stop (STOP_AND_REQUEST_USER) | "bounded retries" mentioned; no ledger; ≤5 not enforced as a run step |
-| G3 | 13-class failure taxonomy recorded per failure | Verifier "failure classes" only; no canonical taxonomy mapping |
+| G3 | 11-class failure taxonomy recorded per failure | Verifier "failure classes" only; no canonical taxonomy mapping |
 | G4 | Per-role capability matrix (10 agents: Read/Write/Exec/Web/Prod) | Absent; roles not realized as dispatchable envelopes |
 | G5 | Approval gates AUTO/REVIEW/APPROVAL_REQUIRED/BLOCKED enforced per phase | Short gates section; not mapped to states; BLOCKED not refused |
 | G6 | Research freshness ≤14 days for current practices | Not present |
@@ -47,7 +47,7 @@ No new external dependencies. The 10 V2 agent roles are realized as
 
 ## Design sections
 
-1. **State machine (13 states)** with per-state: entry/exit condition, action,
+1. **State machine (15 operational states + INIT)** with per-state: entry/exit condition, action,
    artifact produced, approval gate. DISCOVER→REQUIREMENTS→RESEARCH→CODEBASE_STATE
    →ARCHITECT→PLAN→CONSISTENCY_GATE(≤5)→IMPLEMENT→VERIFY→SECURITY_AUDIT
    →FINAL_AUDIT→DEBRIEF→HANDOFF→COMPLETE.
@@ -81,7 +81,7 @@ No new external dependencies. The 10 V2 agent roles are realized as
 
 ## Verification (how we know it's done)
 
-- `skill_view(name='surgical-implementation')` returns the augmented content.
+- `SKILL.md` and `references/v2-*.md` conform to `scripts/conform.py` and schema validation.
 - Every V2 `tests/skill-tests/acceptance.md` item (17) is addressed in
   SKILL.md or the new references.
 - All referenced `references/*.md` files exist (no dangling links).

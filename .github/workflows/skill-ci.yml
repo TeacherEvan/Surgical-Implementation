@@ -1,28 +1,65 @@
-name: skill-conform
+---
+name: skill-ci
 
 "on":
   push:
-    branches: [main]
+    branches: [main, master]
   pull_request:
-    branches: [main]
+    branches: [main, master]
+
+permissions:
+  contents: read
 
 jobs:
-  conform:
-    name: Skill authoring conformance
+  validate:
+    name: Skill validation & behavioural suite
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Run conformance gate
-        run: python3 scripts/conform.py
+      - name: Conformance gate
+        run: python3 -B scripts/conform.py
 
-      # The bundled G&L V2 package has its own validator (required files,
-      # >=10 TODO objectives, loadable runtime schemas). Keep it green too.
-      - name: Validate V2 package
-        run: python3 GLE_Software_Engineering_Auditor_V2_ULTIMATE/scripts/validate-package.py
+      - name: Validate bundled V2 package
+        run: >-
+          python3 -B
+          GLE_Software_Engineering_Auditor_V2_ULTIMATE/scripts/validate-package.py
+
+      - name: Install CI verification tools
+        run: >-
+          python3 -m pip install --upgrade
+          pytest pyyaml jsonschema check-jsonschema ruff mypy yamllint
+
+      - name: Validate Draft 2020-12 JSON Schemas
+        run: |
+          rt="GLE_Software_Engineering_Auditor_V2_ULTIMATE/runtime"
+          check-jsonschema --check-metaschema \
+            schemas/*.schema.json \
+            "$rt"/*.schema.json
+          check-jsonschema \
+            --schemafile "$rt/manifest.schema.json" \
+            "$rt/manifest.example.json"
+
+      - name: Lint and typecheck Python scripts & tests
+        run: |
+          ruff check .
+          ruff format --check .
+          mypy --strict \
+            scripts/ \
+            GLE_Software_Engineering_Auditor_V2_ULTIMATE/scripts/ \
+            tests/
+
+      - name: Lint shell scripts & CI workflow
+        run: |
+          bash -n scripts/sync-skill.sh
+          shellcheck -x scripts/sync-skill.sh
+          yamllint .github/workflows/skill-ci.yml
+
+      - name: Run pytest suite
+        run: pytest -v --tb=short tests/

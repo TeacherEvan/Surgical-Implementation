@@ -1,7 +1,7 @@
 # Skill Update — audit-hygiene-and-evidence-discipline
 Status: NEW CLASS-LEVEL UMBRELLA SKILL NOT CREATED (skill_manage blocked by 57-char description cap x6 attempts; loop stopped per instructions). Durable capture below; recommend `hermes curator adopt audit-hygiene-and-evidence-discipline` when description-cap resolved.
 
-Protected skill noted: `code-review` (bundled `software-development/code-review`) — loaded and in play during session; WRONG / MISSING relative to session learnings (no audit hygiene / salvage-audit / jailbreak-rejection / `.gitignore` exclusion / cosmetic-vs-real rules). Since protected: NOT edited; recommendation recorded below.
+Companion review skill: `surgical-audit` (`@audit-hygiene`) — implements review with built-in audit hygiene rules (`.gitignore` exclusions, salvage audit rev-count, explicit rejection documentation, cosmetic-vs-real separation).
 
 ## What the session produced (real execution, verified — not fabricated)
 - Full 4-phase audit (Phase 1 `audit_report.md` 6872B/65L; Phase 2 `review_findings.md` 6009B/62L; Phase 3 `investigation_report.md` 4766B/58L; Phase 4 `fix_summary.md` 6570B/62L).
@@ -14,12 +14,12 @@ Protected skill noted: `code-review` (bundled `software-development/code-review`
 - No CRITICAL/HIGH defects; LOW hygiene only.
 
 ## Skill update recommendation
-- `code-review` (protected, bundled): WRONG relative to session — missing audit hygiene rules (§.gitignore exclusions, salvage audit rev-count, jailbreak-rejection documentation, cosmetic-vs-real separation). Recommend: note to user; `hermes curator adopt audit-hygiene-and-evidence-discipline` once the umbrella can be registered.
+- `surgical-audit`: Pair with this skill for review and audit hygiene rules (`.gitignore` exclusions, salvage audit rev-count, rejection documentation, cosmetic-vs-real separation).
 - `audit-hygiene-and-evidence-discipline` (new class-level umbrella, `agent-behavior`): attempted; blocked by 57-char description cap. SKILL.md content finalized (trigger + embedded preferences + rules + gate checklist + references). Once description-cap resolved: `hermes skills install` or `curator adopt`.
 
 ## References (added to workspace — durable capture)
-- `references/jailbreak-rejection-note.md`
-- `references/salvage-audit-pattern.md`
-- `references/git-commit-hygiene.md`
+- [V2 Governance & Gates](v2-governance.md)
+- [Git Recovery and Scan](git-recovery-and-scan.md)
+- [Implementation Pitfalls & Structural Invariants](implementation-pitfalls.md)
 
-Note: profile skills dir (`~/.hermes/profiles/default/skills/`) absent — skills are file-based; `code-review` canonical path (`~/.hermes/skills/software-development/code-review/SKILL.md`) confirmed present.
+Note: skills follow file-based discovery under `<SKILLS_DIR>/surgical-implementation/SKILL.md` (with sibling surgical skills `surgical-audit`, `surgical-orchestration`, `surgical-investigation`, and `surgical-hermesdothealth`).

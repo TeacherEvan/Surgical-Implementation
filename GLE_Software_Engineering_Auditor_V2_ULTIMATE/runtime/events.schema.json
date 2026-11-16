@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "AgentEvent",
   "type": "object",
+  "unevaluatedProperties": false,
   "required": [
     "timestamp",
     "event",
@@ -9,16 +10,37 @@
   ],
   "properties": {
     "timestamp": {
-      "type": "string"
+      "type": "string",
+      "format": "date-time"
     },
     "event": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1
     },
     "state": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "INIT",
+        "DISCOVER",
+        "REQUIREMENTS",
+        "RESEARCH",
+        "CODEBASE_STATE",
+        "ARCHITECT",
+        "PLAN",
+        "CONSISTENCY_GATE",
+        "IMPLEMENT",
+        "VERIFY",
+        "SECURITY_AUDIT",
+        "FINAL_AUDIT",
+        "DEBRIEF",
+        "HANDOFF",
+        "COMPLETE",
+        "STOP_AND_REQUEST_USER"
+      ]
     },
     "actor": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1
     },
     "evidence": {
       "type": "array",
@@ -27,7 +49,22 @@
       }
     },
     "metadata": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "trace_id": {
+          "type": "string"
+        },
+        "span_id": {
+          "type": "string"
+        },
+        "gen_ai.agent.name": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
     }
   }
 }

@@ -7,19 +7,19 @@ logic; everything else in the skill is the pipeline it triggers.
 
 > `if >0 prompt = search:plan(docs/parent_folder) & verify-implementation &&
 >  use(as_prompt) to implement workflow. If all plans complete, then implement
->  code-review, handle review as prompt for skill orchestration.`
+>  surgical-audit, handle review as prompt for skill orchestration.`
 
 ## Step-by-step
 
 ### 1. search:plan(docs/parent_folder)
 
 Resolve the repo root (cwd may be a parent like `GAMES/` — use the cwd-vs-project
-guard from code-review: find `.git` / `package.json` within 3 levels). Then scan:
+guard from surgical-audit: find `.git` / `package.json` within 3 levels). Then scan:
 
 ```bash
 # plan docs (markdown) — ASCII-safe by default; this exact pattern is what
 # SKILL.md mandates, so both copies of this rule stay byte-identical.
-rg -l --glob 'docs/**/*.md' -i 'todo|objective|tick|plan|WIP|\[x\]|\[ \]' .
+rg -l -g 'docs/**/*.md' -i 'todo|objective|tick|plan|WIP|\[x\]|\[ \]' .
 # Optional widening, ONLY on a host where you have confirmed rg handles UTF-8
 # in this pattern: add |✅|☑ to catch checkbox-emoji plans. Never make the
 # emoji form the default — it silently returns nothing on hosts where the
@@ -32,19 +32,19 @@ Count `N = number of plan files found`.
 ### 2. if N > 0  →  verify-implementation & use(as_prompt)
 
 - **verify-implementation**: for each plan objective, reconcile against the live
-  tree. Use `verify-before-planning-gaps`: a zero-match grep is NOT proof of
+  tree. Use `surgical-investigation`: a zero-match grep is NOT proof of
   absence; check `git log -- <path>`, read the actual code path, confirm the
   objective's acceptance evidence exists (test passes / behavior present).
 - **use(as_prompt)**: the plan's OPEN objectives become the execution prompt.
   Do not author a new prompt. The plan IS the prompt fed to surgical-orchestration
   (Worker+Verifier loop). Preserve objective wording, IDs, and acceptance criteria.
 
-### 3. if ALL plans complete  →  code-review → orchestration
+### 3. if ALL plans complete  →  surgical-audit → orchestration
 
 "All plans complete" = every objective ticked `[x]`/done OR no open objectives
 remain after verify-implementation.
 
-- Run `code-review` (fast-path for staged diffs, full 4-phase for broad scope).
+- Run `surgical-audit` (fast-path for staged diffs, full 4-phase for broad scope).
 - **handle review as prompt for skill orchestration**: take the review findings
   (`review_findings.md` or fast-path verdict) and feed them BACK into
   `surgical-orchestration` as new JobCard entries — one per affected folder,
@@ -66,7 +66,7 @@ remain after verify-implementation.
 ## Why this is an upgrade
 
 It composes three existing skills into one auditable loop and removes the dead-end
-review: code-review findings automatically become orchestration jobs, closing the
+review: surgical-audit findings automatically become orchestration jobs, closing the
 remediation loop without human re-paste. The plan scan makes the skill
 self-directing from repo state.
 

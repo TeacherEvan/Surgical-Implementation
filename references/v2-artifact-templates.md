@@ -1,10 +1,10 @@
 # G&L Auditor V2 — Artifact Templates (Copy-Ready)
 
-These templates are copied into the TARGET repo's `docs/.scratch-audit/` (or `docs/plans/`) during a run — never written into the surgical-implementation skill itself.
+These templates are copied into the TARGET repo's `docs/.scratch-audit/` during a run — never written into the `surgical-implementation` skill itself. (Committed plan summaries may link from `docs/plans/`, while all active V2 run artifacts, `runtime/*`, and `audit/logs/*` live strictly under `<RUN_WORKSPACE>/docs/.scratch-audit/`.)
 
-Each section below is a self-contained template. Copy the fenced block verbatim into the named file in the run workspace, then fill the placeholders (`<...>`) and tick `[ ]` → `[x]` as each item is satisfied.
+Each section below is a self-contained template. Copy the fenced block verbatim into the named file in `<RUN_WORKSPACE>/docs/.scratch-audit/`, then fill the placeholders (`<...>`) and tick `[ ]` → `[x]` as each item is satisfied.
 
-File destination per template (relative to `docs/.scratch-audit/`):
+File destination per template (relative to `<RUN_WORKSPACE>/docs/.scratch-audit/`):
 
 | Template | Target file |
 |---|---|
@@ -22,6 +22,8 @@ File destination per template (relative to `docs/.scratch-audit/`):
 | 12 | `runtime/manifest.json` |
 | 13 | `runtime/state.json` |
 | 14 | `runtime/events.jsonl` |
+
+Bounded retry logs are appended under `<RUN_WORKSPACE>/docs/.scratch-audit/audit/logs/retry-<STATE>.jsonl` (validated against `schemas/retry-log.schema.json`).
 
 ---
 
@@ -136,6 +138,8 @@ File destination per template (relative to `docs/.scratch-audit/`):
 ## Current architecture
 ```mermaid
 flowchart TD
+    accTitle: Current System Architecture
+    accDescr: Existing entry point and baseline component control flow before implementation changes.
     A[User] --> B[Existing entry point]
     B --> C[Current behavior]
 ```
@@ -143,6 +147,8 @@ flowchart TD
 ## Target architecture
 ```mermaid
 flowchart TD
+    accTitle: Target System Architecture
+    accDescr: Planned entry point, modified modules, and expected validated outcome after implementation.
     A[User] --> B[Entry point]
     B --> C[New/changed behavior]
     C --> D[Expected outcome]
@@ -325,6 +331,9 @@ Reference: `TODO.md`
 - Started:
 - Finished:
 - Agents:
+- Trace ID (OTel):
+- Span ID (OTel):
+- Agent Name (`gen_ai.agent.name`):
 - Research cutoff:
 - Final reviewer:
 - Final status:
@@ -371,9 +380,13 @@ Every Objective must trace to at least one Requirement and one Evidence entry.
 - Destructive operations (rm/force-push/drop): <none / reviewed>
 
 ## CRITICAL findings
-| ID | Severity | Finding | Evidence | Resolution required |
-|---|---|---|---|---|
-| SEC-001 | CRITICAL |  |  |  |
+| ID | Severity | CVSS v4.0 / EPSS / KEV | Finding | Evidence | Resolution required |
+|---|---|---|---|---|---|
+| SEC-001 | CRITICAL | `<vector / epss / KEV?>` |  |  |  |
+
+## Dependency & SBOM evidence
+- Lockfile / SBOM check: `<osv-scanner --call-analysis / CycloneDX 1.6+ / SPDX 3.0.1>`
+- Static / structural scan: `<ast-grep / Semgrep / SARIF 2.1.0 path>`
 
 ## Block decision
 - BLOCK: YES / NO
@@ -452,17 +465,22 @@ Record a trust note so downstream decisions carry provenance.
 
 ```json
 {
-  "runId": "<uuid or monotonically increasing run counter>",
-  "workflow": "surgical-implementation-v2",
-  "startedAt": "2026-08-16T00:00:00Z",
-  "version": "2.0.0",
-  "gates": {
-    "consistency": { "required": true, "passed": false, "attempts": 0 },
-    "verification": { "required": true, "passed": false, "attempts": 0, "maxAttempts": 3 },
-    "security": { "required": true, "passed": false }
-  }
+  "workflow_id": "surgical-implementation-v2",
+  "run_id": "run-001",
+  "skill_version": "1.1.0",
+  "repository": "target-repo",
+  "branch": "feat/plan-execution",
+  "started_at": "2026-08-16T00:00:00Z",
+  "status": "RUNNING",
+  "consistency_attempts": 0,
+  "verification_attempts": 0
 }
 ```
+
+> Schema: `GLE_Software_Engineering_Auditor_V2_ULTIMATE/runtime/manifest.schema.json`
+> (`unevaluatedProperties: false`). On completion add `"ended_at"` (RFC 3339
+> `date-time`) and finalize `"status"` to one of `READY`, `READY_WITH_WARNINGS`,
+> `NOT_READY`, `BLOCKED`, or `STOPPED`.
 
 ---
 
@@ -470,33 +488,30 @@ Record a trust note so downstream decisions carry provenance.
 
 ```json
 {
-  "currentState": "INIT",
-  "history": [
-    { "state": "INIT", "enteredAt": "2026-08-16T00:00:00Z" }
-  ],
-  "retries": {
-    "CONSISTENCY_GATE": 0,
-    "VERIFY": 0,
-    "SECURITY_AUDIT": 0
-  }
+  "state": "INIT",
+  "reason": "Run initialized from plan scan",
+  "attempt": 0
 }
 ```
 
-> Valid `state` values (from the V2 state machine):
-> `INIT, DISCOVER, REQUIREMENTS, RESEARCH, CODEBASE_STATE, ARCHITECT, PLAN,
-> CONSISTENCY_GATE, IMPLEMENT, VERIFY, SECURITY_AUDIT, FINAL_AUDIT, DEBRIEF,
-> HANDOFF, COMPLETE, STOP_AND_REQUEST_USER`.
+> Schema: `GLE_Software_Engineering_Auditor_V2_ULTIMATE/runtime/state.schema.json`
+> (`unevaluatedProperties: false`). Valid `state` values (15 ordered states +
+> escape): `INIT, DISCOVER, REQUIREMENTS, RESEARCH, CODEBASE_STATE, ARCHITECT,
+> PLAN, CONSISTENCY_GATE, IMPLEMENT, VERIFY, SECURITY_AUDIT, FINAL_AUDIT,
+> DEBRIEF, HANDOFF, COMPLETE, STOP_AND_REQUEST_USER`.
 
 ---
 
 ## 14. runtime/events.jsonl
 
 ```jsonl
-{"ts":"2026-08-16T00:00:00Z","state":"INIT","event":"run.started","detail":"Run initialized"}
-{"ts":"2026-08-16T00:01:12Z","state":"REQUIREMENTS","event":"artifact.written","detail":"REQUIREMENTS.md created"}
-{"ts":"2026-08-16T00:05:40Z","state":"CONSISTENCY_GATE","event":"gate.failed","detail":"TRACEABILITY missing evidence for REQ-002"}
+{"timestamp":"2026-08-16T00:00:00Z","event":"run.started","state":"INIT","actor":"orchestrator","evidence":[],"metadata":{"message":"Run initialized","gen_ai.agent.name":"orchestrator"}}
+{"timestamp":"2026-08-16T00:01:12Z","event":"artifact.written","state":"REQUIREMENTS","actor":"investigator","evidence":["docs/.scratch-audit/REQUIREMENTS.md"],"metadata":{"message":"REQUIREMENTS.md created","gen_ai.agent.name":"investigator"}}
+{"timestamp":"2026-08-16T00:05:40Z","event":"gate.failed","state":"CONSISTENCY_GATE","actor":"reviewer","evidence":["docs/.scratch-audit/TRACEABILITY.md"],"metadata":{"message":"TRACEABILITY missing evidence for REQ-002","gen_ai.agent.name":"reviewer"}}
 ```
 
-> One JSON object per line. Required keys: `ts` (ISO-8601 timestamp), `state`
-> (from the V2 state machine), `event` (short dotted name), `detail` (free text).
-> Optional keys allowed by the schema: `actor`, `evidence[]`, `metadata{}`.
+> Schema: `GLE_Software_Engineering_Auditor_V2_ULTIMATE/runtime/events.schema.json`
+> (`unevaluatedProperties: false`). One JSON object per line. Required keys:
+> `timestamp` (RFC 3339 `date-time`), `event` (short dotted name), `state` (same
+> 16-value V2 enum as `state.schema.json`). Optional keys: `actor`, `evidence[]`,
+> `metadata{}` (supports OpenTelemetry `trace_id`, `span_id`, `gen_ai.agent.name`).

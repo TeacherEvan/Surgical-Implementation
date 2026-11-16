@@ -43,11 +43,11 @@ Also accept `agentplan`/`blueprint` JSON in `docs/plans/`.
 ## Resolving a user's loose path string to a real repo
 
 ```bash
-# user says "Documents/VS/GAMES/Devil's Delight" — case/separator often wrong
-ls -ld "/home/ewaldt/Documents/VS/GAMES/Devil-sDelight"   # hyphen, not space
+# user says "Documents/projects/my-app" — case/separator often wrong
+ls -ld "<WORKSPACE_PARENT>/your-project"                   # verify exact directory name
 cd /that/real/path && git remote -v                       # confirm GitHub repo
 ```
 
-Never cross-wire two checkouts of the same repo (e.g. `GAMES/Devil-sDelight`
-vs `Lea/.../Devil-sDelight(Lea)`). The active working copy is usually the one
+Never cross-wire two checkouts of the same repo (e.g. `<PRIMARY_CHECKOUT>/your-project`
+vs `<SECONDARY_CHECKOUT>/your-project`). The active working copy is usually the one
 holding the open PR branch.
