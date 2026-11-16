@@ -19,6 +19,7 @@ git reset --mixed origin/main                     # reattach index to remote tip
 
 After re-init, the working tree shows as fully modified/untracked because git
 lost its index. Do NOT `git add -A`. Instead:
+
 - `git status` to see what's actually changed
 - stage ONLY the intended files: `git add path/to/file1 path/to/file2`
 - commit on a fresh branch: `git checkout -b fix/thing` (NO trailing dot)

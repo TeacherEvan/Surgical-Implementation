@@ -1,6 +1,7 @@
 # Google Places API (New) — radius vs radiusMeters
 
 The Places API (New) `places:searchNearby` endpoint expects:
+
 ```json
 {
   "locationRestriction": {

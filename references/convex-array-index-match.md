@@ -5,6 +5,7 @@ When a Convex schema uses `v.array(v.string())` for multi-value fields (e.g. `de
 ## The bug pattern
 
 Mutation accumulates:
+
 ```typescript
 await ctx.db.patch(existing._id, {
   deviceIds: [...deviceIds, newId],  // array grows
@@ -12,6 +13,7 @@ await ctx.db.patch(existing._id, {
 ```
 
 Query uses exact array equality:
+
 ```typescript
 .withIndex("by_deviceIds_category", (q) =>
   q.eq("deviceIds", [deviceId] as any)  // expects exact ["id"]
@@ -23,6 +25,7 @@ Once the array accumulates a second device (`["id1", "id2"]`), `.eq()` never mat
 ## The fix
 
 Option A — mutation keeps array exact (replace, don't accumulate):
+
 ```typescript
 await ctx.db.patch(existing._id, {
   ...data,

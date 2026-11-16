@@ -7,7 +7,7 @@ Each section below is a self-contained template. Copy the fenced block verbatim 
 File destination per template (relative to `<RUN_WORKSPACE>/docs/.scratch-audit/`):
 
 | Template | Target file |
-|---|---|
+| --- | --- |
 | 1 | `REQUIREMENTS.md` |
 | 2 | `CODEBASE-STATE.md` |
 | 3 | `ARCHITECTURE.md` |
@@ -145,6 +145,7 @@ flowchart TD
 ```
 
 ## Target architecture
+
 ```mermaid
 flowchart TD
     accTitle: Target System Architecture
@@ -155,29 +156,34 @@ flowchart TD
 ```
 
 ## Areas being edited
+
 | Area | Current location | Planned change | Reason | Risk |
-|---|---|---|---|---|
-|  |  |  |  |  |
-|  |  |  |  |  |
+| ---- | ---------------- | -------------- | ------ | ---- |
+|      |                  |                |        |      |
+|      |                  |                |        |      |
 
 ## Interfaces / dependencies
-- <What this change consumes or must stay compatible with>
+
+- `<What this change consumes or must stay compatible with>`
 
 ## Data / control flow
-1. <step>
-2. <step>
-3. <step>
+
+1. `<step>`
+2. `<step>`
+3. `<step>`
 
 ## Security boundaries
+
 - <Trust boundaries crossed, authn/authz points, untrusted inputs>
 
 ## Assumptions
+
 - <architecture-level assumptions, e.g. "endpoint already authenticated">
 
 ## Acceptance criteria mapping
+
 - [ ] AC-001 → <where/how satisfied>
 - [ ] AC-002 → <where/how satisfied>
-```
 
 ---
 
